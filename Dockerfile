@@ -1,9 +1,10 @@
-FROM pytorch/pytorch:2.4.1-cuda12.4-cudnn9-runtime
+FROM pytorch/pytorch:2.1.0-cuda11.8-cudnn8-runtime
 
 WORKDIR /app
 
 RUN pip install --no-cache-dir \
-    sentence-transformers==3.3.1 \
+    transformers==4.44.2 \
+    sentence-transformers==3.0.1 \
     huggingface_hub>=0.20.0 \
     runpod>=1.6.0
 
