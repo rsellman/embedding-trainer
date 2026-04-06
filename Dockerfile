@@ -5,6 +5,7 @@ WORKDIR /app
 RUN pip install --no-cache-dir \
     transformers==4.44.2 \
     sentence-transformers==3.0.1 \
+    datasets>=2.0.0 \
     huggingface_hub>=0.20.0 \
     runpod>=1.6.0
 
