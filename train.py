@@ -29,12 +29,19 @@ def main():
     
     # Download training data
     print("\n--- Downloading training data ---")
-    train_path = hf_hub_download(repo_id=dataset_repo, filename="embedding_train.jsonl", repo_type="dataset", token=hf_token)
+    # Support chunked train files (embedding_train_0.jsonl, etc.) and legacy single file
+    from huggingface_hub import HfApi
+    api = HfApi(token=hf_token)
+    repo_files = [f.rfilename for f in api.list_repo_files(dataset_repo, repo_type="dataset")]
+    train_files = sorted([f for f in repo_files if f.startswith("embedding_train") and f.endswith(".jsonl")])
+    
+    train_paths = [hf_hub_download(repo_id=dataset_repo, filename=tf, repo_type="dataset", token=hf_token) for tf in train_files]
     val_path = hf_hub_download(repo_id=dataset_repo, filename="embedding_val.jsonl", repo_type="dataset", token=hf_token)
     
     # Load data
     train_examples = []
-    with open(train_path) as f:
+    for tp in train_paths:
+      with open(tp) as f:
         for line in f:
             d = json.loads(line)
             train_examples.append(InputExample(texts=[d["anchor"][:512], d["positive"][:512], d["negative"][:512]]))

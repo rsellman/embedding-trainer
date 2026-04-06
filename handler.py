@@ -51,7 +51,8 @@ def handler(event):
 
     # --- 2. Load training data ---
     train_examples = []
-    with open(train_path) as f:
+    for tp in train_paths:
+      with open(tp) as f:
         for line in f:
             d = json.loads(line)
             train_examples.append(InputExample(
